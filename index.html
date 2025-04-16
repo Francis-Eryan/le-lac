@@ -31,19 +31,19 @@
         }
         
         #palier1 {
-            background-image: url('image-1.png');
+            background-image: url('/le-lac/image-1.png');
             z-index: 3;
         }
         
         #palier2 {
-            background-image: url('image-2.png');
+            background-image: url('/le-lac/image-2.png');
             z-index: 2;
             opacity: 0;
             pointer-events: none;
         }
         
         #palier3 {
-            background-image: url('image-3.png');
+            background-image: url('/le-lac/image-3.png');
             z-index: 1;
             opacity: 0;
             pointer-events: none;
@@ -135,9 +135,9 @@
         // Précharger les images
         window.onload = function() {
             const images = [
-                'image-1.png',
-                'image-2.png',
-                'image-3.png'
+                '/le-lac/image-1.png',
+                '/le-lac/image-2.png',
+                '/le-lac/image-3.png'
             ];
             
             images.forEach(src => {
