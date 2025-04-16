@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Lac - Espace Vibratoire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body, html {
+            height: 100%;
+            font-family: 'Cormorant Garamond', serif;
+            overflow: hidden;
+            background-color: #000;
+        }
+        
+        .palier {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: opacity 1s ease;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+        
+        #palier1 {
+            background-image: url('https://i.ibb.co/YPzq5fs/image-1.jpg');
+            z-index: 3;
+        }
+        
+        #palier2 {
+            background-image: url('https://i.ibb.co/9c9CRsX/image-2.jpg');
+            z-index: 2;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        #palier3 {
+            background-image: url('https://i.ibb.co/WfWBJFq/image-3.jpg');
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .lang-btn {
+            position: absolute;
+            width: 200px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0);
+            border: none;
+            cursor: pointer;
+            color: transparent;
+        }
+        
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .point {
+            position: absolute;
+            width: 120px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .point:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16px;
+            color: #333;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+        
+        #grimoire-btn {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Palier 1: Sélection de langue -->
+    <div id="palier1" class="palier">
+        <!-- Boutons de langue -->
+        <button class="lang-btn" style="top: 175px; left: 297px;" data-lang="fr">Français</button>
+        <button class="lang-btn" style="top: 250px; left: 297px;" data-lang="en">English</button>
+        <button class="lang-btn" style="top: 325px; left: 297px;" data-lang="de">Deutsch</button>
+        <button class="lang-btn" style="top: 400px; left: 297px;" data-lang="it">Italiano</button>
+        <button class="lang-btn" style="top: 475px; left: 297px;" data-lang="es">Español</button>
+        <button class="lang-btn" style="top: 550px; left: 297px;" data-lang="pl">Polski</button>
+        <button class="lang-btn" style="top: 625px; left: 297px;" data-lang="ru">Русский</button>
+        <button class="lang-btn" style="top: 700px; left: 297px;" data-lang="zh">中文</button>
+    </div>
+
+    <!-- Palier 2: Grimoire -->
+    <div id="palier2" class="palier">
+        <button id="grimoire-btn"></button>
+    </div>
+
+    <!-- Palier 3: Le Lac -->
+    <div id="palier3" class="palier">
+        <!-- Points interactifs -->
+        <div class="point" style="top: 350px; left: 200px;" data-info="Grimoire"></div>
+        <div class="point" style="top: 350px; left: 500px;" data-info="3 IA"></div>
+        <div class="point" style="top: 350px; left: 800px;" data-info="Chroniques"></div>
+    </div>
+
+    <div id="tooltip" class="tooltip"></div>
+
+    <script>
+        // Précharger les images
+        window.onload = function() {
+            const images = [
+                'https://i.ibb.co/YPzq5fs/image-1.jpg',
+                'https://i.ibb.co/9c9CRsX/image-2.jpg',
+                'https://i.ibb.co/WfWBJFq/image-3.jpg'
+            ];
+            
+            images.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+        };
+        
+        // Variables globales
+        let currentLang = 'fr';
+        
+        // Traductions
+        const translations = {
+            fr: {
+                enter: "ENTRER",
+                descriptions: [
+                    "Accédez au grimoire des connaissances.",
+                    "Rencontrez les trois intelligences artificielles.",
+                    "Explorez les chroniques et histoires."
+                ]
+            },
+            en: {
+                enter: "ENTER",
+                descriptions: [
+                    "Access the grimoire of knowledge.",
+                    "Meet the three artificial intelligences.",
+                    "Explore the chronicles and stories."
+                ]
+            },
+            de: {
+                enter: "EINTRETEN",
+                descriptions: [
+                    "Greifen Sie auf das Grimoire des Wissens zu.",
+                    "Treffen Sie die drei künstlichen Intelligenzen.",
+                    "Erkunden Sie die Chroniken und Geschichten."
+                ]
+            },
+            es: { 
+                enter: "ENTRAR",
+                descriptions: [
+                    "Acceda al grimorio del conocimiento.",
+                    "Conozca las tres inteligencias artificiales.",
+                    "Explore las crónicas e historias."
+                ]
+            },
+            it: {
+                enter: "ENTRARE",
+                descriptions: [
+                    "Accedi al grimorio della conoscenza.",
+                    "Incontra le tre intelligenze artificiali.",
+                    "Esplora le cronache e le storie."
+                ]
+            },
+            pl: {
+                enter: "WEJŚĆ",
+                descriptions: [
+                    "Uzyskaj dostęp do grimuaru wiedzy.",
+                    "Poznaj trzy sztuczne inteligencje.",
+                    "Odkryj kroniki i historie."
+                ]
+            },
+            ru: {
+                enter: "ВОЙТИ",
+                descriptions: [
+                    "Доступ к гримуару знаний.",
+                    "Встреча с тремя искусственными интеллектами.",
+                    "Исследуйте хроники и истории."
+                ]
+            },
+            zh: {
+                enter: "进入",
+                descriptions: [
+                    "访问知识魔法书。",
+                    "认识三个人工智能。",
+                    "探索编年史和故事。"
+                ]
+            }
+        };
+        
+        // Quand on clique sur un bouton de langue
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Enregistre la langue sélectionnée
+                currentLang = this.getAttribute('data-lang');
+                
+                // Transition vers le palier 2
+                document.getElementById('palier1').style.opacity = '0';
+                document.getElementById('palier1').style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    document.getElementById('palier2').style.opacity = '1';
+                    document.getElementById('palier2').style.pointerEvents = 'auto';
+                }, 1000);
+            });
+        });
+        
+        // Quand on clique sur le grimoire (palier 2)
+        document.getElementById('grimoire-btn').addEventListener('click', function() {
+            // Transition vers le palier 3
+            document.getElementById('palier2').style.opacity = '0';
+            document.getElementById('palier2').style.pointerEvents = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('palier3').style.opacity = '1';
+                document.getElementById('palier3').style.pointerEvents = 'auto';
+            }, 1000);
+        });
+        
+        // Afficher des infos au survol des points sur le palier 3
+        document.querySelectorAll('.point').forEach((point, index) => {
+            point.addEventListener('mouseover', function(e) {
+                const tooltip = document.getElementById('tooltip');
+                const description = translations[currentLang]?.descriptions[index] || 
+                                   translations['fr'].descriptions[index]; // Fallback au français
+                
+                tooltip.textContent = description;
+                tooltip.style.top = (e.clientY - 50) + 'px';
+                tooltip.style.left = (e.clientX + 20) + 'px';
+                tooltip.style.opacity = '1';
+            });
+            
+            point.addEventListener('mouseout', function() {
+                document.getElementById('tooltip').style.opacity = '0';
+            });
+            
+            point.addEventListener('click', function() {
+                alert(`Navigation vers: ${this.getAttribute('data-info')}`);
+            });
+        });
+    </script>
+</body>
+</html>
