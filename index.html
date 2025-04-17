@@ -99,6 +99,29 @@
             border: none;
             cursor: pointer;
         }
+        <style>
+    /* Ajouter ces styles */
+    .lang-container {
+        position: absolute;
+        top: 20%;
+        right: 30%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 200px;
+    }
+    
+    .lang-btn {
+        position: relative; /* Au lieu de absolute */
+        width: 100%;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.2); /* Légèrement visible pour mieux repérer */
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        color: transparent;
+        margin-bottom: 5px;
+    }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
 </head>
