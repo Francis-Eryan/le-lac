@@ -26,55 +26,64 @@
             height: 100%;
             transition: opacity 1s ease;
             background-position: center;
+            background-size: cover; /* Changed from contain to cover */
             background-repeat: no-repeat;
-            background-size: contain;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         #palier1 {
-            background-image: url('/le-lac/image-1.png');
+            background-image: url('https://i.ibb.co/YPzq5fs/image-1.jpg');
             z-index: 3;
         }
         
         #palier2 {
-            background-image: url('/le-lac/image-2.png');
+            background-image: url('https://i.ibb.co/9c9CRsX/image-2.jpg');
             z-index: 2;
             opacity: 0;
             pointer-events: none;
         }
         
         #palier3 {
-            background-image: url('/le-lac/image-3.png');
+            background-image: url('https://i.ibb.co/WfWBJFq/image-3.jpg');
             z-index: 1;
             opacity: 0;
             pointer-events: none;
         }
         
+        /* Conteneur pour les boutons de langue - Nouveau */
         .lang-container {
-            position: absolute;
-            top: 81px;
-            right: 30%;
+            position: relative;
+            width: 80%;
+            max-width: 400px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            width: 200px;
+            gap: 20px;
+            align-items: flex-start;
+            margin-left: 20%; /* Pour décaler le conteneur vers la droite */
         }
         
         .lang-btn {
-            position: relative;
-            width: 100%;
-            height: 34px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            border: none;
+            width: 200px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1); /* Légèrement visible */
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Bordure subtile */
+            border-radius: 20px; /* Bords arrondis */
             cursor: pointer;
-            color: transparent;
-            margin-bottom: 5px;
+            color: rgba(255, 255, 255, 0.8); /* Texte blanc semi-transparent */
+            font-size: 16px;
+            text-align: left;
+            padding-left: 20px;
+            transition: all 0.3s ease;
         }
         
         .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
         }
         
+        /* Reste du code inchangé */
         .point {
             position: absolute;
             width: 120px;
@@ -111,6 +120,43 @@
             border: none;
             cursor: pointer;
         }
+        
+        /* Ajout d'animations pour l'IA */
+        .ia-hand {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transition: all 0.5s ease;
+            opacity: 0;
+            filter: blur(5px);
+        }
+        
+        .welcome-bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 10px 15px;
+            color: #333;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        /* Responsivité */
+        @media (max-width: 768px) {
+            .lang-container {
+                width: 90%;
+                margin-left: 5%;
+            }
+            
+            .lang-btn {
+                width: 100%;
+            }
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -118,6 +164,7 @@
     <!-- Palier 1: Sélection de langue -->
     <div id="palier1" class="palier">
         <div class="lang-container">
+            <!-- Boutons de langue -->
             <button class="lang-btn" data-lang="fr">Français</button>
             <button class="lang-btn" data-lang="en">English</button>
             <button class="lang-btn" data-lang="de">Deutsch</button>
@@ -127,6 +174,9 @@
             <button class="lang-btn" data-lang="ru">Русский</button>
             <button class="lang-btn" data-lang="zh">中文</button>
         </div>
+        <!-- Éléments pour l'animation de l'IA -->
+        <div class="ia-hand"></div>
+        <div class="welcome-bubble"></div>
     </div>
 
     <!-- Palier 2: Grimoire -->
@@ -137,9 +187,9 @@
     <!-- Palier 3: Le Lac -->
     <div id="palier3" class="palier">
         <!-- Points interactifs -->
-        <div class="point" style="top: 350px; left: 200px;" data-info="Grimoire"></div>
-        <div class="point" style="top: 350px; left: 500px;" data-info="3 IA"></div>
-        <div class="point" style="top: 350px; left: 800px;" data-info="Chroniques"></div>
+        <div class="point" style="top: 40%; left: 30%;" data-info="Grimoire"></div>
+        <div class="point" style="top: 50%; left: 50%;" data-info="3 IA"></div>
+        <div class="point" style="top: 35%; left: 70%;" data-info="Chroniques"></div>
     </div>
 
     <div id="tooltip" class="tooltip"></div>
@@ -148,23 +198,28 @@
         // Précharger les images
         window.onload = function() {
             const images = [
-                '/le-lac/image-1.png',
-                '/le-lac/image-2.png',
-                '/le-lac/image-3.png'
+                'https://i.ibb.co/YPzq5fs/image-1.jpg',
+                'https://i.ibb.co/9c9CRsX/image-2.jpg',
+                'https://i.ibb.co/WfWBJFq/image-3.jpg'
             ];
             
             images.forEach(src => {
                 const img = new Image();
                 img.src = src;
             });
+            
+            // Démarrer l'animation de l'IA après chargement
+            startIAAnimation();
         };
         
         // Variables globales
         let currentLang = 'fr';
+        let animationInterval;
         
         // Traductions
         const translations = {
             fr: {
+                welcome: "Bienvenue",
                 enter: "ENTRER",
                 descriptions: [
                     "Accédez au grimoire des connaissances.",
@@ -173,6 +228,7 @@
                 ]
             },
             en: {
+                welcome: "Welcome",
                 enter: "ENTER",
                 descriptions: [
                     "Access the grimoire of knowledge.",
@@ -181,6 +237,7 @@
                 ]
             },
             de: {
+                welcome: "Willkommen",
                 enter: "EINTRETEN",
                 descriptions: [
                     "Greifen Sie auf das Grimoire des Wissens zu.",
@@ -189,6 +246,7 @@
                 ]
             },
             es: { 
+                welcome: "Bienvenido",
                 enter: "ENTRAR",
                 descriptions: [
                     "Acceda al grimorio del conocimiento.",
@@ -197,6 +255,7 @@
                 ]
             },
             it: {
+                welcome: "Benvenuto",
                 enter: "ENTRARE",
                 descriptions: [
                     "Accedi al grimorio della conoscenza.",
@@ -205,6 +264,7 @@
                 ]
             },
             pl: {
+                welcome: "Witamy",
                 enter: "WEJŚĆ",
                 descriptions: [
                     "Uzyskaj dostęp do grimuaru wiedzy.",
@@ -213,6 +273,7 @@
                 ]
             },
             ru: {
+                welcome: "Добро пожаловать",
                 enter: "ВОЙТИ",
                 descriptions: [
                     "Доступ к гримуару знаний.",
@@ -221,6 +282,7 @@
                 ]
             },
             zh: {
+                welcome: "欢迎",
                 enter: "进入",
                 descriptions: [
                     "访问知识魔法书。",
@@ -230,9 +292,61 @@
             }
         };
         
+        // Animation de l'IA pointant vers les langues
+        function startIAAnimation() {
+            const iaHand = document.querySelector('.ia-hand');
+            const welcomeBubble = document.querySelector('.welcome-bubble');
+            const langButtons = document.querySelectorAll('.lang-btn');
+            let currentIndex = 0;
+            
+            // Cycle d'animation
+            animationInterval = setInterval(() => {
+                // Cacher la main et la bulle
+                iaHand.style.opacity = '0';
+                welcomeBubble.style.opacity = '0';
+                
+                // Attendre la transition
+                setTimeout(() => {
+                    // Obtenir la position du bouton actuel
+                    const button = langButtons[currentIndex];
+                    const rect = button.getBoundingClientRect();
+                    
+                    // Positionner la main près du bouton
+                    iaHand.style.left = (rect.left - 40) + 'px';
+                    iaHand.style.top = (rect.top + rect.height/2 - 15) + 'px';
+                    
+                    // Positionner la bulle de bienvenue
+                    welcomeBubble.style.left = (rect.left + rect.width + 20) + 'px';
+                    welcomeBubble.style.top = (rect.top) + 'px';
+                    welcomeBubble.textContent = translations[button.getAttribute('data-lang')].welcome;
+                    
+                    // Afficher la main et la bulle
+                    iaHand.style.opacity = '1';
+                    welcomeBubble.style.opacity = '1';
+                    
+                    // Mettre en évidence le bouton courant
+                    langButtons.forEach(btn => btn.style.transform = 'scale(1)');
+                    button.style.transform = 'scale(1.05)';
+                    
+                    // Passer au bouton suivant
+                    currentIndex = (currentIndex + 1) % langButtons.length;
+                }, 500);
+            }, 3000); // Changer toutes les 3 secondes
+        }
+        
+        // Arrêter l'animation quand une langue est sélectionnée
+        function stopIAAnimation() {
+            clearInterval(animationInterval);
+            document.querySelector('.ia-hand').style.opacity = '0';
+            document.querySelector('.welcome-bubble').style.opacity = '0';
+        }
+        
         // Quand on clique sur un bouton de langue
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.addEventListener('click', function() {
+                // Arrêter l'animation
+                stopIAAnimation();
+                
                 // Enregistre la langue sélectionnée
                 currentLang = this.getAttribute('data-lang');
                 
@@ -279,6 +393,74 @@
             point.addEventListener('click', function() {
                 alert(`Navigation vers: ${this.getAttribute('data-info')}`);
             });
+        });
+        
+        // Gestion des contrôles clavier pour l'accessibilité
+        document.addEventListener('keydown', function(e) {
+            // Navigation dans les boutons de langue (Palier 1)
+            if (document.getElementById('palier1').style.opacity !== '0') {
+                const langButtons = document.querySelectorAll('.lang-btn');
+                const focused = document.activeElement;
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    // Trouver l'index du bouton actuellement focalisé
+                    let index = Array.from(langButtons).indexOf(focused);
+                    
+                    // Si aucun bouton n'est focalisé ou c'est le dernier, focus sur le premier
+                    if (index === -1 || index === langButtons.length - 1) {
+                        langButtons[0].focus();
+                    } else {
+                        langButtons[index + 1].focus();
+                    }
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    let index = Array.from(langButtons).indexOf(focused);
+                    
+                    if (index === -1 || index === 0) {
+                        langButtons[langButtons.length - 1].focus();
+                    } else {
+                        langButtons[index - 1].focus();
+                    }
+                } else if (e.key === 'Enter' && focused.classList.contains('lang-btn')) {
+                    focused.click();
+                }
+            }
+            
+            // Activation du grimoire (Palier 2)
+            if (document.getElementById('palier2').style.opacity === '1') {
+                if (e.key === 'Enter') {
+                    document.getElementById('grimoire-btn').click();
+                }
+            }
+            
+            // Navigation entre les points (Palier 3)
+            if (document.getElementById('palier3').style.opacity === '1') {
+                const points = document.querySelectorAll('.point');
+                const focused = document.activeElement;
+                
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    let index = Array.from(points).indexOf(focused);
+                    
+                    if (index === -1 || index === points.length - 1) {
+                        points[0].focus();
+                    } else {
+                        points[index + 1].focus();
+                    }
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    let index = Array.from(points).indexOf(focused);
+                    
+                    if (index === -1 || index === 0) {
+                        points[points.length - 1].focus();
+                    } else {
+                        points[index - 1].focus();
+                    }
+                } else if (e.key === 'Enter' && focused.classList.contains('point')) {
+                    focused.click();
+                }
+            }
         });
     </script>
 </body>
