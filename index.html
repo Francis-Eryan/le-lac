@@ -26,7 +26,7 @@
             height: 100%;
             transition: opacity 1s ease;
             background-position: center;
-            background-size: cover;
+            background-size: contain; /* Revenir à 'contain' pour éviter l'étirement */
             background-repeat: no-repeat;
             display: flex;
             align-items: center;
@@ -34,47 +34,43 @@
         }
         
         #palier1 {
-            /* Utilisons plusieurs options pour maximiser les chances */
-            background-image: url('./image-1.png'), url('image-1.png'), url('le-lac-image-1.png');
-            background-color: #1a2a3a; /* Couleur de secours au cas où */
+            background-image: url('image-1.png');
+            background-color: #1a2a3a; /* Couleur de secours */
             z-index: 3;
         }
         
         #palier2 {
-            /* Utilisons plusieurs options pour maximiser les chances */
-            background-image: url('./image-2.png'), url('image-2.png'), url('le-lac-image-2.png');
-            background-color: #2a3a4a; /* Couleur de secours au cas où */
+            background-image: url('image-2.png');
+            background-color: #2a3a4a; /* Couleur de secours */
             z-index: 2;
             opacity: 0;
             pointer-events: none;
         }
         
         #palier3 {
-            /* Utilisons plusieurs options pour maximiser les chances */
-            background-image: url('./image-3.png'), url('image-3.png'), url('le-lac-image-3.png');
-            background-color: #3a4a5a; /* Couleur de secours au cas où */
+            background-image: url('image-3.png');
+            background-color: #3a4a5a; /* Couleur de secours */
             z-index: 1;
             opacity: 0;
             pointer-events: none;
         }
         
-        /* Conteneur pour les boutons de langue */
+        /* Conteneur pour les boutons de langue - Repositionné */
         .lang-container {
-            position: relative;
-            width: 80%;
-            max-width: 400px;
+            position: absolute;
+            left: 10%; /* Ajusté pour correspondre à l'image 3 */
+            top: 20%;
+            width: 25%;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            align-items: flex-start;
-            margin-left: 20%;
+            gap: 10px; /* Réduit l'espacement */
         }
         
         .lang-btn {
-            width: 200px;
+            width: 100%;
             height: 40px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 20px;
             cursor: pointer;
             color: rgba(255, 255, 255, 0.9);
@@ -85,22 +81,38 @@
         }
         
         .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.03); /* Réduit légèrement la transformation */
         }
         
+        /* Ajustement des points pour le palier 3 */
         .point {
             position: absolute;
             width: 120px;
             height: 80px;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0);
+            border: none;
             cursor: pointer;
         }
         
+        /* Positionnement spécifique pour correspondre à l'image 3 */
+        .point[data-info="Grimoire"] {
+            bottom: 20%;
+            left: 20%;
+        }
+        
+        .point[data-info="3 IA"] {
+            bottom: 20%;
+            left: 45%;
+        }
+        
+        .point[data-info="Chroniques"] {
+            bottom: 20%;
+            left: 70%;
+        }
+        
         .point:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
         }
         
         .tooltip {
@@ -114,14 +126,16 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             z-index: 10;
+            max-width: 250px;
         }
         
         #grimoire-btn {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 100px;
+            transform: translate(-50%, -25%);
             background: transparent;
             border: none;
             cursor: pointer;
@@ -132,7 +146,7 @@
             position: absolute;
             width: 30px;
             height: 30px;
-            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 70%);
             border-radius: 50%;
             pointer-events: none;
             transition: all 0.5s ease;
@@ -142,32 +156,62 @@
         
         .welcome-bubble {
             position: absolute;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.8);
             border-radius: 15px;
-            padding: 10px 15px;
+            padding: 8px 12px;
             color: #333;
-            font-size: 16px;
+            font-size: 14px;
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
             box-shadow: 0 0 10px rgba(0,0,0,0.2);
         }
         
+        /* Loader pendant le chargement des images */
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1s ease;
+        }
+        
+        .loader {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid #fff;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         /* Responsivité */
         @media (max-width: 768px) {
             .lang-container {
-                width: 90%;
-                margin-left: 5%;
-            }
-            
-            .lang-btn {
-                width: 100%;
+                left: 5%;
+                width: 40%;
             }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Loader pour l'attente du chargement des images -->
+    <div class="loader-container" id="loader">
+        <div class="loader"></div>
+    </div>
+
     <!-- Palier 1: Sélection de langue -->
     <div id="palier1" class="palier">
         <div class="lang-container">
@@ -194,43 +238,27 @@
     <!-- Palier 3: Le Lac -->
     <div id="palier3" class="palier">
         <!-- Points interactifs -->
-        <div class="point" style="top: 40%; left: 30%;" data-info="Grimoire"></div>
-        <div class="point" style="top: 50%; left: 50%;" data-info="3 IA"></div>
-        <div class="point" style="top: 35%; left: 70%;" data-info="Chroniques"></div>
+        <div class="point" data-info="Grimoire"></div>
+        <div class="point" data-info="3 IA"></div>
+        <div class="point" data-info="Chroniques"></div>
     </div>
 
     <div id="tooltip" class="tooltip"></div>
 
     <script>
-        // Précharger les images - essayer plusieurs variantes possibles
-        window.onload = function() {
-            const imageVariants = [
-                'image-1.png', 'image-2.png', 'image-3.png',
-                './image-1.png', './image-2.png', './image-3.png',
-                'le-lac-image-1.png', 'le-lac-image-2.png', 'le-lac-image-3.png'
-            ];
-            
-            imageVariants.forEach(src => {
-                const img = new Image();
-                img.src = src;
-                
-                // Log optionnel pour débogage
-                img.onload = function() {
-                    console.log(`Image chargée: ${src}`);
-                };
-                
-                img.onerror = function() {
-                    console.log(`Erreur de chargement: ${src}`);
-                };
-            });
-            
-            // Démarrer l'animation de l'IA après chargement
-            startIAAnimation();
-        };
-        
         // Variables globales
         let currentLang = 'fr';
         let animationInterval;
+        let imagesLoaded = 0;
+        const totalImages = 3;
+        
+        // Fonction pour cacher le loader quand tout est chargé
+        function hideLoader() {
+            document.getElementById('loader').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loader').style.display = 'none';
+            }, 1000);
+        }
         
         // Traductions
         const translations = {
@@ -308,6 +336,51 @@
             }
         };
         
+        // Précharger les images
+        function preloadImages() {
+            const images = [
+                'image-1.png',
+                'image-2.png',
+                'image-3.png'
+            ];
+            
+            images.forEach(src => {
+                const img = new Image();
+                
+                img.onload = function() {
+                    imagesLoaded++;
+                    if (imagesLoaded === totalImages) {
+                        // Toutes les images sont chargées
+                        hideLoader();
+                        // Démarrer l'animation de l'IA
+                        startIAAnimation();
+                    }
+                };
+                
+                img.onerror = function() {
+                    console.error(`Erreur de chargement: ${src}`);
+                    imagesLoaded++; // On compte quand même pour ne pas bloquer l'utilisateur
+                    
+                    // Si toutes les images sont "chargées" (même avec erreurs)
+                    if (imagesLoaded === totalImages) {
+                        hideLoader();
+                        startIAAnimation();
+                    }
+                };
+                
+                img.src = src;
+            });
+            
+            // Timeout de sécurité si les images ne chargent pas après 5 secondes
+            setTimeout(() => {
+                if (imagesLoaded < totalImages) {
+                    console.warn("Certaines images n'ont pas pu être chargées. Affichage forcé.");
+                    hideLoader();
+                    startIAAnimation();
+                }
+            }, 5000);
+        }
+        
         // Animation de l'IA pointant vers les langues
         function startIAAnimation() {
             const iaHand = document.querySelector('.ia-hand');
@@ -332,8 +405,8 @@
                     iaHand.style.top = (rect.top + rect.height/2 - 15) + 'px';
                     
                     // Positionner la bulle de bienvenue
-                    welcomeBubble.style.left = (rect.left + rect.width + 20) + 'px';
-                    welcomeBubble.style.top = (rect.top) + 'px';
+                    welcomeBubble.style.left = (rect.left + rect.width + 10) + 'px';
+                    welcomeBubble.style.top = (rect.top + rect.height/2 - 15) + 'px';
                     welcomeBubble.textContent = translations[button.getAttribute('data-lang')].welcome;
                     
                     // Afficher la main et la bulle
@@ -342,11 +415,11 @@
                     
                     // Mettre en évidence le bouton courant
                     langButtons.forEach(btn => btn.style.transform = 'scale(1)');
-                    button.style.transform = 'scale(1.05)';
+                    button.style.transform = 'scale(1.03)';
                     
                     // Passer au bouton suivant
                     currentIndex = (currentIndex + 1) % langButtons.length;
-                }, 500);
+                }, 300);
             }, 3000); // Changer toutes les 3 secondes
         }
         
@@ -397,8 +470,8 @@
                                    translations['fr'].descriptions[index]; // Fallback au français
                 
                 tooltip.textContent = description;
-                tooltip.style.top = (e.clientY - 50) + 'px';
-                tooltip.style.left = (e.clientX + 20) + 'px';
+                tooltip.style.top = (e.clientY - 40) + 'px';
+                tooltip.style.left = (e.clientX + 15) + 'px';
                 tooltip.style.opacity = '1';
             });
             
@@ -478,6 +551,9 @@
                 }
             }
         });
+        
+        // Démarrer le préchargement des images au chargement de la page
+        window.addEventListener('load', preloadImages);
     </script>
 </body>
 </html>
