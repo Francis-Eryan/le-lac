@@ -26,7 +26,7 @@
             height: 100%;
             transition: opacity 1s ease;
             background-position: center;
-            background-size: cover; /* Changed from contain to cover */
+            background-size: cover;
             background-repeat: no-repeat;
             display: flex;
             align-items: center;
@@ -34,25 +34,31 @@
         }
         
         #palier1 {
-            background-image: url('le-lac-image-1.png'); /* Changé de JPG à PNG */
+            /* Utilisons plusieurs options pour maximiser les chances */
+            background-image: url('./image-1.png'), url('image-1.png'), url('le-lac-image-1.png');
+            background-color: #1a2a3a; /* Couleur de secours au cas où */
             z-index: 3;
         }
         
         #palier2 {
-            background-image: url('le-lac-image-2.png'); /* Changé de JPG à PNG */
+            /* Utilisons plusieurs options pour maximiser les chances */
+            background-image: url('./image-2.png'), url('image-2.png'), url('le-lac-image-2.png');
+            background-color: #2a3a4a; /* Couleur de secours au cas où */
             z-index: 2;
             opacity: 0;
             pointer-events: none;
         }
         
         #palier3 {
-            background-image: url('le-lac-image-3.png'); /* Changé de JPG à PNG */
+            /* Utilisons plusieurs options pour maximiser les chances */
+            background-image: url('./image-3.png'), url('image-3.png'), url('le-lac-image-3.png');
+            background-color: #3a4a5a; /* Couleur de secours au cas où */
             z-index: 1;
             opacity: 0;
             pointer-events: none;
         }
         
-        /* Conteneur pour les boutons de langue - Nouveau */
+        /* Conteneur pour les boutons de langue */
         .lang-container {
             position: relative;
             width: 80%;
@@ -61,17 +67,17 @@
             flex-direction: column;
             gap: 20px;
             align-items: flex-start;
-            margin-left: 20%; /* Pour décaler le conteneur vers la droite */
+            margin-left: 20%;
         }
         
         .lang-btn {
             width: 200px;
             height: 40px;
-            background: rgba(255, 255, 255, 0.1); /* Légèrement visible */
-            border: 1px solid rgba(255, 255, 255, 0.3); /* Bordure subtile */
-            border-radius: 20px; /* Bords arrondis */
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
             cursor: pointer;
-            color: rgba(255, 255, 255, 0.8); /* Texte blanc semi-transparent */
+            color: rgba(255, 255, 255, 0.9);
             font-size: 16px;
             text-align: left;
             padding-left: 20px;
@@ -79,22 +85,22 @@
         }
         
         .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.3);
             transform: scale(1.05);
         }
         
-        /* Reste du code inchangé */
         .point {
             position: absolute;
             width: 120px;
             height: 80px;
-            background: rgba(255, 255, 255, 0);
-            border: none;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
             cursor: pointer;
         }
         
         .point:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.3);
         }
         
         .tooltip {
@@ -126,17 +132,17 @@
             position: absolute;
             width: 30px;
             height: 30px;
-            background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 70%);
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
             border-radius: 50%;
             pointer-events: none;
             transition: all 0.5s ease;
             opacity: 0;
-            filter: blur(5px);
+            filter: blur(3px);
         }
         
         .welcome-bubble {
             position: absolute;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
             padding: 10px 15px;
             color: #333;
@@ -144,6 +150,7 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
         }
         
         /* Responsivité */
@@ -195,17 +202,26 @@
     <div id="tooltip" class="tooltip"></div>
 
     <script>
-        // Précharger les images
+        // Précharger les images - essayer plusieurs variantes possibles
         window.onload = function() {
-            const images = [
-                'le-lac-image-1.png', // Changé de JPG à PNG
-                'le-lac-image-2.png', // Changé de JPG à PNG
-                'le-lac-image-3.png'  // Changé de JPG à PNG
+            const imageVariants = [
+                'image-1.png', 'image-2.png', 'image-3.png',
+                './image-1.png', './image-2.png', './image-3.png',
+                'le-lac-image-1.png', 'le-lac-image-2.png', 'le-lac-image-3.png'
             ];
             
-            images.forEach(src => {
+            imageVariants.forEach(src => {
                 const img = new Image();
                 img.src = src;
+                
+                // Log optionnel pour débogage
+                img.onload = function() {
+                    console.log(`Image chargée: ${src}`);
+                };
+                
+                img.onerror = function() {
+                    console.log(`Erreur de chargement: ${src}`);
+                };
             });
             
             // Démarrer l'animation de l'IA après chargement
